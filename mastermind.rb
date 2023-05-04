@@ -4,8 +4,7 @@ class Mastermind
     require_relative 'codebreaker'
 
     def initialize
-        @codemaker = nil
-        @codebreaker = nil
+        @role = nil
         @round = 1
         @winner = false
     end
@@ -29,7 +28,7 @@ class Mastermind
     end
 
     def update_role(string)
-        string == '1' && @codebreaker = 1 || string == '2' && @codemaker = 1
+        string == '1' && @role = 1 || string == '2' && @role = 1
     end
 
     def valid_role(string)
