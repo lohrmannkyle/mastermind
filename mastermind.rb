@@ -28,7 +28,7 @@ class Mastermind
     end
 
     def update_role(string)
-        string == '1' && @role = 1 || string == '2' && @role = 1
+        string == '1' && @role = 1 || string == '2' && @role = 2
     end
 
     def valid_role(string)
