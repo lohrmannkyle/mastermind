@@ -1,5 +1,5 @@
 class Codemaker
-    def initialize(code)
-        @code = code
+    def initialize
+        @code = nil
     end
 end
