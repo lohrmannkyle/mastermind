@@ -14,8 +14,8 @@ class Mastermind
         Display.intro
         choice = self.get_role
         self.update_role(choice)
-        until round > 12 || @winner
-            round += 1
+        until @round > 12 || @winner
+            @round += 1
         end
     end
 
