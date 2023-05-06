@@ -19,6 +19,7 @@ class Mastermind
         set_role
         create_code
         start_role_based_loop
+        Display.game_over
     end
 
     def get_role
@@ -63,8 +64,6 @@ class Mastermind
     end
     
     def provide_feedback(guess)
-        puts ' ---- Guess being made ----'
-        p guess
         results = []
         guess.each_with_index do |num,i|
             if @codemaker.code[i] == num
@@ -109,13 +108,12 @@ class Mastermind
     
     def ai_loop
         until end_game?
-            puts "Guess #{@round}"
-            puts ' ---- Code to guess ----'
             p @codemaker.code
             guess = @codebreaker.generate_guess
             check_guess(guess)
             @round += 1
         end
+        puts "Computer guessed the code in #{@round - 1} rounds!"
     end
 
     def end_game?

@@ -37,4 +37,8 @@ class Display
         puts 'Invalid entry.'
         puts "Please enter four digits on a single line from 1-6.\n"
     end
+
+    def self.game_over
+        puts "Game over! Thanks for playing!"
+    end
 end
