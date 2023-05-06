@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 class Mastermind
     require_relative 'display'
     require_relative 'codemaker'
@@ -7,31 +9,67 @@ class Mastermind
         @role = nil
         @round = 1
         @winner = false
+        @test = true
+        @codemaker = Codemaker.new
+        @codebreaker = Codebreaker.new
     end
     
     def start
         Display.intro
-        choice = self.get_role
-        self.update_role(choice)
+        set_role
+        create_code
         until @round > 12 || @winner
+            puts @round
             @round += 1
         end
     end
 
     def get_role
         choice = gets.chomp
-        unless self.valid_role(choice)
+        unless valid_role(choice)
             Display.prompt_roles
-            self.get_role
+            get_role
         end
         choice
     end
 
-    def update_role(string)
-        string == '1' && @role = 'codemaker' || string == 'codebreaker' && @role = 2
+    def create_code
+        if @role == 'codebreaker'
+            @codemaker.set_code('1234')
+        else
+            Display.prompt_code
+            @codemaker.set_code(get_four_digits)
+        end
+    end
+
+    def set_role
+        choice = @test ? '2' : get_role
+        @role = choice == '1' ? 'codemaker' : 'codebreaker'
     end
 
     def valid_role(string)
         string == '1' || string == '2'
-    end    
+    end
+
+    def get_four_digits
+        code = gets.chomp
+        if validate(code)
+            return code
+        else
+            get_four_digits
+        end
+    end
+
+    def make_guess
+        ###
+    end
+
+    def validate(code)
+        code = code.gsub(/\s+/, "")
+        if code.length == 4 && code !~ /[^1-6]/
+            return true
+        end
+        Display.entry_error
+        false
+    end
 end
