@@ -9,7 +9,7 @@ class Mastermind
         @role = nil
         @round = 1
         @winner = false
-        @test = true
+        @test = false
         @codemaker = Codemaker.new
         @codebreaker = Codebreaker.new
     end
@@ -22,12 +22,21 @@ class Mastermind
     end
 
     def get_role
-        choice = gets.chomp
-        unless valid_role(choice)
+        choice = nil
+        until valid_role(choice)
+            choice = gets.chomp
             Display.prompt_roles
-            get_role
         end
         choice
+    end
+
+    def set_role
+        choice = @test ? '2' : get_role
+        @role = choice == '1' ? 'codemaker' : 'codebreaker'
+    end
+    
+    def valid_role(string)
+        string == '1' || string == '2'
     end
 
     def create_code
@@ -38,16 +47,7 @@ class Mastermind
             @codemaker.set_code(get_four_digits)
         end
     end
-
-    def set_role
-        choice = @test ? '2' : get_role
-        @role = choice == '1' ? 'codemaker' : 'codebreaker'
-    end
-
-    def valid_role(string)
-        string == '1' || string == '2'
-    end
-
+    
     def get_four_digits
         code = gets.chomp.gsub(/\s+/, "")
         if validate(code)
@@ -63,6 +63,8 @@ class Mastermind
     end
     
     def provide_feedback(guess)
+        p guess
+        puts ' ---- Guess being made ----'
         results = []
         guess.each_with_index do |num,i|
             if @codemaker.code[i] == num
@@ -76,7 +78,6 @@ class Mastermind
         p results
     end
 
-
     def validate(code)
         if code.length == 4 && code !~ /[^1-6]/
             return true
@@ -86,7 +87,12 @@ class Mastermind
     end
 
     def start_role_based_loop
-        @role == 'codebreaker' && breaker_loop || @role == 'codemaker' && maker_loope
+        @role == 'codebreaker' && breaker_loop || @role == 'codemaker' && ai_loop
+        # if @role == 'codebreaker'
+        #     breaker_loop
+        # else
+        #     ai_loop
+        # end
     end
 
     def breaker_loop
@@ -94,15 +100,18 @@ class Mastermind
             Display.prompt_guess
             guess = get_four_digits
             check_guess(guess)
-            @codebreaker.add_guess(@round, guess)
+            @codebreaker.update_last(guess)
             @round += 1
         end
 
     end
     
-    def maker_loop
+    def ai_loop
         until end_game?
-            puts "This is the maker loop..."
+            puts "Guess #{@round}"
+            p @codemaker.code
+            puts ' ---- Code to guess ----'
+            check_guess(@codebreaker.generate_guess)
             @round += 1
         end
     end
