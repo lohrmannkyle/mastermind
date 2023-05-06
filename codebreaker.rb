@@ -1,5 +1,8 @@
+require 'pry-byebug'
+
 class Codebreaker
-    attr_reader :guesses
+    attr_reader :last_guess
+    attr_writer :feedback
     
     def initialize
         @last_guess = []
@@ -11,33 +14,21 @@ class Codebreaker
     end
 
     def generate_guess
-        unless @guesses
-            return ['1','2','3','4']
-        end
-        analyze_feedback
-    end
-
-    def add_feedback(result)
-        @feedback.push(result)
+        guess = @last_guess == [] ? ['1','1','1','1'] : analyze_feedback
+        update_last(guess)
+        guess
     end
 
     def analyze_feedback
+        # ◯ ✔
         guess = []
-        somewhere = nil
-        @feedback.each_with_index do |i,symbol|
-            if symbol == "✔"
+        @feedback.each_with_index do |symbol, i|
+            if symbol == '✔'
                 guess.push(@last_guess[i])
-            elsif symbol == '◯'
-                somewhere = @last_guess[i]
-                guess.push(String(Integer(somewhere) + 1))
-            elsif somewhere
-                guess.push(somewhere)
             else
                 guess.push(String(Integer(@last_guess[i]) + 1))
             end
         end
         guess
     end
-
-
 end

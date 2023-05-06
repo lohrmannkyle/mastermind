@@ -63,8 +63,8 @@ class Mastermind
     end
     
     def provide_feedback(guess)
-        p guess
         puts ' ---- Guess being made ----'
+        p guess
         results = []
         guess.each_with_index do |num,i|
             if @codemaker.code[i] == num
@@ -75,6 +75,7 @@ class Mastermind
                 results.push('✘')
             end
         end
+        @codebreaker.feedback = results
         p results
     end
 
@@ -109,9 +110,10 @@ class Mastermind
     def ai_loop
         until end_game?
             puts "Guess #{@round}"
-            p @codemaker.code
             puts ' ---- Code to guess ----'
-            check_guess(@codebreaker.generate_guess)
+            p @codemaker.code
+            guess = @codebreaker.generate_guess
+            check_guess(guess)
             @round += 1
         end
     end
