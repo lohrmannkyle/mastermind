@@ -18,10 +18,7 @@ class Mastermind
         Display.intro
         set_role
         create_code
-        until @round > 12 || @winner
-            puts @round
-            @round += 1
-        end
+        start_role_based_loop
     end
 
     def get_role
@@ -35,7 +32,7 @@ class Mastermind
 
     def create_code
         if @role == 'codebreaker'
-            @codemaker.set_code('1234')
+            @codemaker.generate_code
         else
             Display.prompt_code
             @codemaker.set_code(get_four_digits)
@@ -52,24 +49,50 @@ class Mastermind
     end
 
     def get_four_digits
-        code = gets.chomp
+        code = gets.chomp.gsub(/\s+/, "")
         if validate(code)
-            return code
+            return code.split('')
         else
             get_four_digits
         end
     end
 
-    def make_guess
-        ###
+    def check_guess(guess)
+        @winner = guess == @codemaker.code
     end
 
     def validate(code)
-        code = code.gsub(/\s+/, "")
         if code.length == 4 && code !~ /[^1-6]/
             return true
         end
         Display.entry_error
         false
+    end
+
+    def start_role_based_loop
+        @role == 'codebreaker' && breaker_loop || @role == 'codemaker' && maker_loope
+    end
+
+    def breaker_loop
+        until end_game?
+            puts "This is the breaker loop..."
+            p @codemaker.code
+            Display.prompt_guess
+            guess = get_four_digits
+            check_guess(guess)
+            @round += 1
+        end
+
+    end
+    
+    def maker_loop
+        until end_game?
+            puts "This is the maker loop..."
+            @round += 1
+        end
+    end
+
+    def end_game?
+        @round == 12 || @winner
     end
 end

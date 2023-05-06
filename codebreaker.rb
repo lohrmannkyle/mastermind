@@ -1,9 +1,9 @@
 class Codebreaker
     def initialize
-        @guess_count = 0
+        @guesses = {}
     end
 
-    def increment_guesses
-        @guess_count += 1
+    def add_guess (round, guess)
+        guesses[round] = guess
     end
 end
