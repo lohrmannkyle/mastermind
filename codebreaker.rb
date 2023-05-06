@@ -4,6 +4,6 @@ class Codebreaker
     end
 
     def add_guess (round, guess)
-        guesses[round] = guess
+        @guesses[round] = guess
     end
 end

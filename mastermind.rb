@@ -59,7 +59,23 @@ class Mastermind
 
     def check_guess(guess)
         @winner = guess == @codemaker.code
+        provide_feedback(guess)
     end
+    
+    def provide_feedback(guess)
+        results = []
+        guess.each_with_index do |num,i|
+            if @codemaker.code[i] == num
+                results.push("✔")
+            elsif @codemaker.code.include?(num)
+                results.push('◯')
+            else
+                results.push('✘')
+            end
+        end
+        p results
+    end
+
 
     def validate(code)
         if code.length == 4 && code !~ /[^1-6]/
@@ -75,11 +91,10 @@ class Mastermind
 
     def breaker_loop
         until end_game?
-            puts "This is the breaker loop..."
-            p @codemaker.code
             Display.prompt_guess
             guess = get_four_digits
             check_guess(guess)
+            @codebreaker.add_guess(@round, guess)
             @round += 1
         end
 
